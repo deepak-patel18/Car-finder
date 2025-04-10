@@ -1,40 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🚗 Car Finder Web App
 
-## Getting Started
+A responsive car discovery platform built with **Next.js** and **TailwindCSS**. Users can filter cars by brand, fuel type, and price range, view detailed information, and manage a wishlist using `localStorage`.
 
-First, run the development server:
+
+## 🔧 Tech Stack
+
+- **Framework:** Next.js (React.js)
+- **Styling:** Tailwind CSS
+- **State Management:** useState, useEffect
+- **Storage:** LocalStorage (for Wishlist)
+- **Deployment:** Vercel
+
+
+## 🚀 Features
+
+- 🔍 Search & Filter by:
+  - Brand
+  - Fuel Type
+  - Price Range
+
+- 🧾 Pagination 
+- ❤️ Wishlist management with localStorage
+- 📄 Detailed view for each car
+- ⚡ Real-time UI updates
+- 📱 Fully responsive design
+- 🌙 (Optional) Dark mode toggle *(in development)*
+
+## 🛠️ Installation
+
+Clone the repository:
 
 ```bash
+git clone https://github.com/your-username/car-finder-app.git
+cd car-finder-app
+
+Install dependencies:
+npm install
+
+Run the development server:
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+ Live Demo
+🔗 https://your-app.vercel.app
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+📁 Folder Structure
+.
+├── components/         # Reusable UI Components
+├── pages/
+│   ├── api/            # Mock API routes
+│   └── car/[id].tsx    # Car detail page
+├── public/             # Static assets
+├── styles/             # Tailwind global styles
+└── utils/              # Wishlist logic
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+🙌 Author
+Deepak Patel
+https://www.linkedin.com/in/deepak-patel-63378a21b/
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+📜 License
+This project is licensed under the MIT License.
+Would you like me to help:
+1. Customize it with **your name**, **GitHub repo**, and **live link**?
+2. Help you deploy it to **Vercel** now?
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
