@@ -1,113 +1,122 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { useEffect, useState } from 'react';
+import Head from 'next/head';
+import CarCard from '../components/CarCard';
+import WishlistDrawer from '../components/WishlistDrawer';
+import DarkModeToggle from '../components/DarkModeToggle';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// ✅ Car type definition to fix TypeScript build error
+type Car = {
+  id: string | number;
+  brand: string;
+  fuelType: string;
+  price: number;
+  seating: number;
+  image: string;
+  name: string;
+};
 
 export default function Home() {
+  const [cars, setCars] = useState<Car[]>([]);
+  const [brand, setBrand] = useState('');
+  const [fuelType, setFuelType] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [wishlistOpen, setWishlistOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      const query = new URLSearchParams({
+        brand,
+        fuelType,
+        price: maxPrice || '0',
+        seating: '0',
+        page: '1',
+      });
+
+      const res = await fetch(`/api/cars?${query.toString()}`);
+      const data = await res.json();
+      setCars(data);
+    };
+    fetchCars();
+  }, [brand, fuelType, maxPrice]);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
+      <Head>
+        <title>Car Finder</title>
+      </Head>
+
+      <main className="p-4 max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-3">
+          <h1 className="text-3xl font-bold text-center sm:text-left">🚗 Car Finder</h1>
+          <div className="flex items-center gap-3">
+            <DarkModeToggle />
+            <button
+              onClick={() => setWishlistOpen(true)}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
+            >
+              ❤️ Wishlist
+            </button>
+          </div>
         </div>
+
+        {/* Filters */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <select
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            className="p-2 rounded-lg border dark:bg-gray-800 dark:border-gray-700"
+          >
+            <option value="">All Brands</option>
+            <option value="Tesla">Tesla</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Hyundai">Hyundai</option>
+            <option value="Tata">Tata</option>
+          </select>
+
+          <select
+            value={fuelType}
+            onChange={(e) => setFuelType(e.target.value)}
+            className="p-2 rounded-lg border dark:bg-gray-800 dark:border-gray-700"
+          >
+            <option value="">All Fuel Types</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Electric">Electric</option>
+          </select>
+
+          <input
+            type="number"
+            placeholder="Min Price"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            className="p-2 rounded-lg border dark:bg-gray-800 dark:border-gray-700"
+          />
+
+          <input
+            type="number"
+            placeholder="Max Price"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            className="p-2 rounded-lg border dark:bg-gray-800 dark:border-gray-700"
+          />
+        </div>
+
+        {/* Car Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {cars.length > 0 ? (
+            cars.map((car) => <CarCard key={car.id} car={car} />)
+          ) : (
+            <p className="col-span-full text-center text-gray-500 dark:text-gray-400">
+              No cars found matching the filters.
+            </p>
+          )}
+        </div>
+
+        {/* Wishlist Drawer */}
+        <WishlistDrawer open={wishlistOpen} onClose={() => setWishlistOpen(false)} />
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
